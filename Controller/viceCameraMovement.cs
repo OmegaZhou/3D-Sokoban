@@ -19,9 +19,9 @@ public class viceCameraMovement : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             float rotationX = Input.GetAxis("Mouse X") * sensitivity;
-            print("X move is " + Input.GetAxis("Mouse X"));
-            /*transform.eulerAngles += Vector3.up * rotationX;
-            transform.position = new Vector3(centerPosition.x + Mathf.Sin(transform.eulerAngles.y), centerPosition.y, centerPosition.z + Mathf.Cos(transform.eulerAngles.y));*/
+            float rotationY = Input.GetAxis("Mouse Y") * sensitivity;
+
+            transform.RotateAround(centerPosition, transform.right, -rotationY);
             transform.RotateAround(centerPosition, Vector3.up, rotationX);
         }
     }
