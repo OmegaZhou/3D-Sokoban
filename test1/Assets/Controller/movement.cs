@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public class movement : MonoBehaviour
 {
     public float delay;
@@ -18,7 +17,8 @@ public class movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D) && Time.time > next)
+        var key = GameObject.Find("Sphere").GetComponent<Sound>().GetDirection();
+        if ((key == 3 || Input.GetKeyDown(KeyCode.D)) && Time.time > next)
         {
             moveDir = Vector3.right;
             next = delay + Time.time;
@@ -26,7 +26,7 @@ public class movement : MonoBehaviour
             detect(moveDir);
             move(new Vector3(0, 90, 0));
         }
-        if (Input.GetKeyDown(KeyCode.A) && Time.time > next)
+        if ((key == 2 || Input.GetKeyDown(KeyCode.A)) && Time.time > next)
         {
             moveDir = Vector3.left;
             next = delay + Time.time;
@@ -34,7 +34,7 @@ public class movement : MonoBehaviour
             detect(moveDir);
             move(new Vector3(0, -90, 0));
         }
-        if (Input.GetKeyDown(KeyCode.W) && Time.time > next)
+        if ((key == 0 || Input.GetKeyDown(KeyCode.W)) && Time.time > next)
         {
             moveDir = Vector3.forward;
             next = delay + Time.time;
@@ -42,7 +42,7 @@ public class movement : MonoBehaviour
             detect(moveDir);
             move(new Vector3(0, 0, 0));
         }
-        if (Input.GetKeyDown(KeyCode.S) && Time.time > next)
+        if ((key == 1 || Input.GetKeyDown(KeyCode.S)) && Time.time > next)
         {
             moveDir = Vector3.back;
             next = delay + Time.time;
@@ -50,15 +50,15 @@ public class movement : MonoBehaviour
             detect(moveDir);
             move(new Vector3(0, 180, 0));
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && Time.time > next)
+        if ((key == 4 || Input.GetKeyDown(KeyCode.UpArrow)) && Time.time > next)
         {
             moveDir = Vector3.up;
             next = delay + Time.time;
             //transform.Translate(-transform.up, Space.Self);
             detect(moveDir);
-            move(new Vector3(-90, 0, 0)) ;
+            move(new Vector3(-90, 0, 0));
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow) && Time.time > next)
+        if ((key == 5 || Input.GetKeyDown(KeyCode.DownArrow)) && Time.time > next)
         {
             moveDir = Vector3.down;
             next = delay + Time.time;
@@ -74,7 +74,7 @@ public class movement : MonoBehaviour
         GameObject go = other.gameObject;
         float distance = (go.transform.position - this.transform.position).sqrMagnitude;
         print(go.transform.position + "go's position");
-        print(this.transform.position + "this's position"); 
+        print(this.transform.position + "this's position");
         print(distance);
         if (distance < 1)
         {
@@ -86,7 +86,7 @@ public class movement : MonoBehaviour
     {
         print("Collision entered");
         GameObject go = collision.gameObject;
-        if((go.transform.position - this.transform.position).sqrMagnitude <= 1)
+        if ((go.transform.position - this.transform.position).sqrMagnitude <= 1)
         {
             go.transform.Translate(moveDir);
         }
