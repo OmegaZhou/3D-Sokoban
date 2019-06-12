@@ -66,6 +66,7 @@ public class Recognize : MonoBehaviour
         {
             Debug.Log("开始一次语音识别失败！");
             MSCDLL.MSPLogout();
+            MSCDLL.QISRSessionEnd(session_id, hints);
             return null;
         }
         /*
@@ -109,6 +110,8 @@ public class Recognize : MonoBehaviour
         if (res != (int)Errors.MSP_SUCCESS)
         {
             Debug.Log("写入音频失败！" + res);
+            MSCDLL.MSPLogout();
+            MSCDLL.QISRSessionEnd(session_id, hints);
             return null;
         }
         while (RecogStatus.MSP_REC_STATUS_COMPLETE != rec_stat)
@@ -126,6 +129,8 @@ public class Recognize : MonoBehaviour
             if (errcode != (int)Errors.MSP_SUCCESS)
             {
                 Debug.Log("获取结果失败：" + errcode);
+                MSCDLL.MSPLogout();
+                MSCDLL.QISRSessionEnd(session_id, hints);
                 return null;
             }
             if (now_result != null)
@@ -135,6 +140,8 @@ public class Recognize : MonoBehaviour
                 if (totalLength > 4096)
                 {
                     Debug.Log("缓存空间不够" + totalLength);
+                    MSCDLL.MSPLogout();
+                    MSCDLL.QISRSessionEnd(session_id, hints);
                     return null;
                 }
                 result.Append(Marshal.PtrToStringAnsi(now_result));
