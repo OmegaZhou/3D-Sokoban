@@ -9,7 +9,7 @@ public class Sound : MonoBehaviour
     //中文：zh_cn 英文：en_us
     private string audio_path = null;
     private const string app_id = "appid = 5cffa937";
-    private const string session_begin_params = "sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf-8";
+    private const string session_begin_params = "sub = iat, domain = iat, language = en_us, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf-8";
 
     public AudioSource audio;//存储录制的音频
     private int frequency = 16000;//采样率
@@ -48,27 +48,27 @@ public class Sound : MonoBehaviour
             return;
         }
         Debug.Log(re);
-        if (re.Contains("前"))
+        if (re.Contains("forward") || re.Contains("Forward"))
         {
             dir[0] = true;
         }
-        if (re.Contains("后"))
+        if (re.Contains("back") || re.Contains("Back"))
         {
             dir[1] = true;
         }
-        if (re.Contains("左"))
+        if (re.Contains("left") || re.Contains("Left"))
         {
             dir[2] = true;
         }
-        if (re.Contains("右"))
+        if (re.Contains("right") || re.Contains("Right"))
         {
             dir[3] = true;
         }
-        if (re.Contains("上"))
+        if (re.Contains("up") || re.Contains("Up"))
         {
             dir[4] = true;
         }
-        if (re.Contains("下"))
+        if (re.Contains("down") || re.Contains("Down"))
         {
             dir[5] = true;
         }
