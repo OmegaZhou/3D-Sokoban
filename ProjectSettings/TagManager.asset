@@ -7,6 +7,8 @@ TagManager:
   - box
   - wall
   - des
+  - door
+  - button
   layers:
   - Default
   - TransparentFX
