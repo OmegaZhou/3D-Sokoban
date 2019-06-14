@@ -52,6 +52,8 @@ public class FPMovement : MonoBehaviour
             //transform.Translate(transform.forward, Space.Self);
             detect(moveDir);
             //move(new Vector3(0, 0, 0));
+            print("change is " + change);
+
             iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
             //transform.position = transform.position + change;
         }
@@ -97,7 +99,7 @@ public class FPMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    /*void OnTriggerEnter(Collider other)
     {
         print("Trigger entered");
         GameObject go = other.gameObject;
@@ -119,7 +121,7 @@ public class FPMovement : MonoBehaviour
         {
             go.transform.Translate(moveDir);
         }
-    }
+    }*/
 
     void move(Vector3 DirectEuler)
     {

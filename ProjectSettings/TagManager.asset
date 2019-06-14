@@ -9,6 +9,7 @@ TagManager:
   - des
   - door
   - button
+  - fire
   layers:
   - Default
   - TransparentFX
