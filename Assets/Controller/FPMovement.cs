@@ -41,9 +41,7 @@ public class FPMovement : MonoBehaviour
             next = delay + Time.time;
             detect(moveDir);
 
-
             iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            checkFinish();
         }
         if (!isPaused && Input.GetKeyDown(KeyCode.S) && Time.time > next)
         {
@@ -56,23 +54,25 @@ public class FPMovement : MonoBehaviour
         {
             moveDir = transform.up;
             next = delay + Time.time;
+            detect(moveDir);
 
-            if (transform.eulerAngles.x <= 90 || transform.eulerAngles.x > 270)
-            {
-                transform.eulerAngles = transform.eulerAngles + Vector3.right * -90;
-            }
+            iTween.MoveTo(gameObject, transform.position + change, 0.2f);
         }
         if (!isPaused && Input.GetKeyDown(KeyCode.DownArrow) && Time.time > next)
         {
             moveDir = -transform.up;
             next = delay + Time.time;
- 
-            if (transform.eulerAngles.x < 90.0f || transform.eulerAngles.x >= 270)
-            {
-                transform.eulerAngles = transform.eulerAngles + Vector3.right * 90;
-            }
-            print("down arrow, x is " + transform.eulerAngles.x);
+            detect(moveDir);
+
+            iTween.MoveTo(gameObject, transform.position + change, 0.2f);
         }
+
+        if(!isPaused && Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+        all.GetComponent<CheckFinishment>().checkMatch();
     }
 
     /*void OnTriggerEnter(Collider other)
@@ -111,7 +111,7 @@ public class FPMovement : MonoBehaviour
 
         change = direct;
 
-        if (Physics.Raycast(this.gameObject.transform.position, direct, out hit, 1))
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.25f), direct, out hit, 1))
         {
             if (hit.transform.tag == "box")
             {
@@ -132,11 +132,4 @@ public class FPMovement : MonoBehaviour
         }
     }
 
-    void checkFinish()
-    {
-        if (all.GetComponent<CheckFinishment>().checkMatch())
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("WinScene");
-        }
-    }
 }

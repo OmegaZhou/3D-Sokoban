@@ -24,6 +24,7 @@ public class Continue : MonoBehaviour
     public void ContinueGame()
     {
         player.GetComponent<FPMovement>().isPaused = false;
+        player.GetComponent<Animator>().speed = 1;
         if (menu)
         {
             menu.GetComponent<visibility>().disappear();

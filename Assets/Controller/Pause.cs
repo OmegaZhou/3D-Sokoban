@@ -20,9 +20,11 @@ public class Pause : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             player.GetComponent<FPMovement>().isPaused = true;
+            player.GetComponent<Animator>().speed = 0;
             print("space pressed");
             if (!isActived)
-            { 
+            {
+                print("activated");
                 pauseMenu.SetActive(true);
                 isActived = true;
             }

@@ -34,7 +34,7 @@ public class CheckFinishment : MonoBehaviour
         
     }
 
-    public bool checkMatch()
+    public void checkMatch()
     {
         print("box len is " + boxLen);
         print("des len is " + desLen);
@@ -45,7 +45,7 @@ public class CheckFinishment : MonoBehaviour
             for(int j = 0; j < desLen; j++)
             {
                 print("the difference is " + (box[i].position - desPos[i]));
-                if ((box[i].position - desPos[j]).magnitude < 0.0001)
+                if ((box[i].position - desPos[j]).magnitude < 0.1)
                 {
                     matched = true;
                     break;
@@ -53,10 +53,11 @@ public class CheckFinishment : MonoBehaviour
             }
             if (!matched)
             {
-                return false;
+                print("No Match");
+                return;
             }
             matched = false;
         }
-        return true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("WinScene");
     }
 }
