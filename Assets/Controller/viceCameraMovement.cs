@@ -10,7 +10,7 @@ public class viceCameraMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        centerPosition = new Vector3(5.0f, 5.0f, 5.0f);
+        centerPosition = new Vector3(2.5f, 2.5f, 2.5f);
     }
 
     // Update is called once per frame

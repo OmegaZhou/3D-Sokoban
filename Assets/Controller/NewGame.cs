@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class Fire : MonoBehaviour
+public class NewGame : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        
+        Button btn = this.GetComponent<Button>();
+        btn.onClick.AddListener(newGame);
     }
 
     // Update is called once per frame
@@ -15,11 +18,9 @@ public class Fire : MonoBehaviour
     {
         
     }
-    void OnTriggerEnter(Collider collider)
+
+    void newGame()
     {
-        if (collider.tag == "box" || collider.tag == "Player")
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("LoseScene");
-        }
+        SceneManager.LoadScene("PushBox");
     }
 }
