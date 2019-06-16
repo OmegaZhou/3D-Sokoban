@@ -3,6 +3,8 @@
 public class FPMovement : MonoBehaviour
 {
     public float delay;
+    public bool isPaused = false;
+    public GameObject all;
 
     private Vector3 moveDir;
     private Vector3 change;
@@ -18,85 +20,59 @@ public class FPMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D) && Time.time > next)
+        if (!isPaused && Input.GetKeyDown(KeyCode.D) && Time.time > next)
         {
             moveDir = transform.right;
             next = delay + Time.time;
 
-            print("moveDir is " + moveDir);
-
-            //transform.Translate(transform.right, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, 90, 0));
-           
-            //iTween.LookTo(this.gameObject, transform.position + moveDir, 0f);
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-           transform.eulerAngles = transform.eulerAngles + Vector3.up * 90;
+            transform.eulerAngles = transform.eulerAngles + Vector3.up * 90;
         }
-        if (Input.GetKeyDown(KeyCode.A) && Time.time > next)
+        if (!isPaused && Input.GetKeyDown(KeyCode.A) && Time.time > next)
         {
             moveDir = -transform.right;
             next = delay + Time.time;
-            //transform.Translate(-transform.right, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, -90, 0));
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
+
+
             transform.eulerAngles = transform.eulerAngles + Vector3.up * -90;
         }
-        if (Input.GetKeyDown(KeyCode.W) && Time.time > next)
+        if (!isPaused && Input.GetKeyDown(KeyCode.W) && Time.time > next)
         {
             moveDir = transform.forward;
             next = delay + Time.time;
-            //transform.Translate(transform.forward, Space.Self);
             detect(moveDir);
-            //move(new Vector3(0, 0, 0));
-            print("change is " + change);
 
             iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
         }
-        if (Input.GetKeyDown(KeyCode.S) && Time.time > next)
+        if (!isPaused && Input.GetKeyDown(KeyCode.S) && Time.time > next)
         {
             moveDir = -transform.forward;
             next = delay + Time.time;
-            //transform.Translate(-transform.forward, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, 180, 0));
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
+
             transform.eulerAngles = transform.eulerAngles + Vector3.up * 180;
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && Time.time > next)
+        if (!isPaused && Input.GetKeyDown(KeyCode.UpArrow) && Time.time > next)
         {
             moveDir = transform.up;
             next = delay + Time.time;
-            //transform.Translate(-transform.up, Space.Self);
             detect(moveDir);
-            //move(new Vector3(-90, 0, 0));
-            //iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-            if (transform.eulerAngles.x <= 90 || transform.eulerAngles.x > 270)
-            {
-                transform.eulerAngles = transform.eulerAngles + Vector3.right * -90;
-            }
+
+            iTween.MoveTo(gameObject, transform.position + change, 0.2f);
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow) && Time.time > next)
+        if (!isPaused && Input.GetKeyDown(KeyCode.DownArrow) && Time.time > next)
         {
             moveDir = -transform.up;
             next = delay + Time.time;
-            //transform.Translate(-transform.down, Space.Self);
             detect(moveDir);
-            //move(new Vector3(90, 0, 0));
-            //iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-            if (transform.eulerAngles.x < 90.0f || transform.eulerAngles.x >= 270)
-            {
-                transform.eulerAngles = transform.eulerAngles + Vector3.right * 90;
-            }
-            print("down arrow, x is " + transform.eulerAngles.x);
+
+            iTween.MoveTo(gameObject, transform.position + change, 0.2f);
         }
+
+        if(!isPaused && Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+        all.GetComponent<CheckFinishment>().checkMatch();
     }
 
     /*void OnTriggerEnter(Collider other)
@@ -135,7 +111,7 @@ public class FPMovement : MonoBehaviour
 
         change = direct;
 
-        if (Physics.Raycast(this.gameObject.transform.position, direct, out hit, 1))
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.25f), direct, out hit, 1))
         {
             if (hit.transform.tag == "box")
             {
@@ -155,4 +131,5 @@ public class FPMovement : MonoBehaviour
             }
         }
     }
+
 }
