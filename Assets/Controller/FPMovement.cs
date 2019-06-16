@@ -67,7 +67,7 @@ public class FPMovement : MonoBehaviour
             iTween.MoveTo(gameObject, transform.position + change, 0.2f);
         }
 
-        if(!isPaused && Input.GetKeyDown(KeyCode.Escape))
+        if (!isPaused && Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
@@ -124,11 +124,12 @@ public class FPMovement : MonoBehaviour
                 }
                 hit.transform.position = hit.transform.position + change;
             }
-            else if (hit.transform.tag == "wall")
+            else if (hit.transform.tag == "wall" || hit.transform.tag == "button" || hit.transform.tag == "fire")
             {
                 print("wall found");
                 change = new Vector3(0, 0, 0);
             }
+            print(hit.transform.tag);
         }
     }
 

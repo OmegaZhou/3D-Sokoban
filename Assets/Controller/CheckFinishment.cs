@@ -36,15 +36,15 @@ public class CheckFinishment : MonoBehaviour
 
     public void checkMatch()
     {
-        print("box len is " + boxLen);
-        print("des len is " + desLen);
+        //print("box len is " + boxLen);
+        //print("des len is " + desLen);
 
         bool matched = false;
         for(int i = 0; i < boxLen; i++)
         {
             for(int j = 0; j < desLen; j++)
             {
-                print("the difference is " + (box[i].position - desPos[i]));
+                //print("the difference is " + (box[i].position - desPos[i]));
                 if ((box[i].position - desPos[j]).magnitude < 0.1)
                 {
                     matched = true;
@@ -53,7 +53,7 @@ public class CheckFinishment : MonoBehaviour
             }
             if (!matched)
             {
-                print("No Match");
+                //print("No Match");
                 return;
             }
             matched = false;

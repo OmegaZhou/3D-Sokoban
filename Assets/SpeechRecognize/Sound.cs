@@ -21,11 +21,10 @@ public class Sound : MonoBehaviour
     {
         audio = gameObject.GetComponent<AudioSource>();
         audio.clip = Microphone.Start(null, true, 1, frequency);
-        InvokeRepeating("temp", 0, 1);
+        InvokeRepeating("Rec", 0, 1);
     }
-    void LateUpdate()
+    public void Rec()
     {
-
         if (Microphone.GetPosition(null) <= 0)
         {
             return;
@@ -35,14 +34,13 @@ public class Sound : MonoBehaviour
             return;
         }
         AudioData = Float2Byte();
-        //print(GetVolume(AudioData));
-        //System.Threading.Thread t = new System.Threading.Thread(Process);
-        //t.Start();
-    }
-    public void temp()
-    {
-        AudioData = Float2Byte();
-        print(GetVolume(AudioData));
+        int vol = GetVolume(AudioData);
+        if (vol < 1000)
+        {
+            return;
+        }
+        System.Threading.Thread t = new System.Threading.Thread(Process);
+        t.Start();
     }
     void Process()
     {
@@ -133,7 +131,7 @@ public class Sound : MonoBehaviour
             byteArr.CopyTo(bytesData, i * 2);
 
         }
-        print(max);
+        //print(max);
         return bytesData;
 
     }
