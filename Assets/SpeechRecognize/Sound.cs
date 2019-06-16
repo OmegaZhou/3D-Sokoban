@@ -6,12 +6,14 @@ using System;
 
 public class Sound : MonoBehaviour
 {
+    public int limit = 3000;
+
     //中文：zh_cn 英文：en_us
     private string audio_path = null;
     private const string app_id = "appid = 5cffa937";
     private const string session_begin_params = "sub = iat, domain = iat, language = en_us, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf-8";
 
-    public AudioSource audio;//存储录制的音频
+    private AudioSource audio;//存储录制的音频
     private int frequency = 16000;//采样率
     private bool[] dir = new bool[6];
     private bool flag = false;
@@ -20,10 +22,10 @@ public class Sound : MonoBehaviour
     {
         audio = gameObject.GetComponent<AudioSource>();
         audio.clip = Microphone.Start(null, true, 1, frequency);
+        //On();
     }
-    void LateUpdate()
+    public void Rec()
     {
-
         if (Microphone.GetPosition(null) <= 0)
         {
             return;
@@ -33,10 +35,15 @@ public class Sound : MonoBehaviour
             return;
         }
         AudioData = Float2Byte();
+        int vol = GetVolume(AudioData);
+        print("vol is " + vol);
+        if (vol < limit)
+        {
+            return;
+        }
         System.Threading.Thread t = new System.Threading.Thread(Process);
         t.Start();
     }
-
     void Process()
     {
         flag = true;
@@ -48,7 +55,7 @@ public class Sound : MonoBehaviour
             return;
         }
         Debug.Log(re);
-        if (re.Contains("forward") || re.Contains("Forward"))
+        if (re.Contains("forward") || re.Contains("Forward") || re.Contains("Front") || re.Contains("front"))
         {
             dir[0] = true;
         }
@@ -68,7 +75,7 @@ public class Sound : MonoBehaviour
         {
             dir[4] = true;
         }
-        if (re.Contains("down") || re.Contains("Down"))
+        if (re.Contains("down") || re.Contains("Down") || re.Contains("Done") || re.Contains("done"))
         {
             dir[5] = true;
         }
@@ -112,16 +119,59 @@ public class Sound : MonoBehaviour
         //dataSource array because a float converted in Int16 is 2 bytes.
 
         int rescaleFactor = short.MaxValue; //to convert float to Int16
-
+        var max = 0f;
         for (int i = 0; i < samples.Length; i++)
         {
             intData[i] = (short)(samples[i] * rescaleFactor);
+
             byte[] byteArr = new byte[2];
+            if (max < Math.Abs(intData[i]))
+            {
+                max = Math.Abs(intData[i]);
+            }
             byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i * 2);
-        }
 
+        }
+        //print(max);
         return bytesData;
 
+    }
+
+    int GetVolume(byte[] source)
+    {
+        int vol = 0;
+        for (int i = 0; i < source.Length; i += 2)
+        {
+            int temp = 0;
+            if (source[i + 1]>0x80)
+            {
+                temp = (source[i + 1] ^ 0xff);
+                temp = (temp << 8) + (source[i] ^ 0xff)+1;
+            }
+            else
+            {
+                temp = source[i + 1];
+                temp = (temp << 8) + source[i];
+                
+            }
+            
+            //temp = source[i];
+            if (vol < temp)
+            {
+                vol = temp;
+            }
+        }
+        
+        return vol;
+    }
+    public void Off()
+    {
+        while (flag) ;
+        CancelInvoke("Rec");
+    }
+    public void On()
+    {
+        InvokeRepeating("Rec", 0, 1);
     }
 }

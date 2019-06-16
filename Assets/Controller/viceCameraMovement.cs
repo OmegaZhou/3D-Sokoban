@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class viceCameraMovement : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class viceCameraMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        centerPosition = new Vector3(5.0f, 5.0f, 5.0f);
+        centerPosition = new Vector3(2.5f, 2.5f, 2.5f);
     }
 
     // Update is called once per frame
@@ -18,6 +19,7 @@ public class viceCameraMovement : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
+            print("rotated");
             float rotationX = Input.GetAxis("Mouse X") * sensitivity;
             float rotationY = Input.GetAxis("Mouse Y") * sensitivity;
 

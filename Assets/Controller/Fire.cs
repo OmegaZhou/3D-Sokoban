@@ -19,7 +19,7 @@ public class Fire : MonoBehaviour
     {
         if (collider.tag == "box" || collider.tag == "Player")
         {
-            print("Game end");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("LoseScene");
         }
     }
 }

@@ -3,6 +3,9 @@
 public class FPMovement : MonoBehaviour
 {
     public float delay;
+    public bool isPaused = false;
+    public GameObject all;
+    
 
     private Vector3 moveDir;
     private Vector3 change;
@@ -18,110 +21,41 @@ public class FPMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D) && Time.time > next)
-        {
-            moveDir = transform.right;
-            next = delay + Time.time;
+        var key = gameObject.GetComponent<Sound>().GetDirection();
 
-            print("moveDir is " + moveDir);
+        if ((key == 3 || Input.GetKeyDown(KeyCode.D)) && Time.time > next)
+        {
+            right();
+        }
+        if ((key == 2 || Input.GetKeyDown(KeyCode.A)) && Time.time > next)
+        {
+            left();
+        }
+        if ((key == 0 || Input.GetKeyDown(KeyCode.W)) && Time.time > next)
+        {
+            forward();
+        }
+        if ((key == 1 || Input.GetKeyDown(KeyCode.S) && Time.time > next))
+        {
+            back();
+        }
+        if ((key == 4 || Input.GetKeyDown(KeyCode.UpArrow)) && Time.time > next)
+        {
+            up();
+        }
+        if ((key == 5 || Input.GetKeyDown(KeyCode.DownArrow)) && Time.time > next)
+        {
+            down();
+        }
 
-            //transform.Translate(transform.right, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, 90, 0));
-           
-            //iTween.LookTo(this.gameObject, transform.position + moveDir, 0f);
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-           transform.eulerAngles = transform.eulerAngles + Vector3.up * 90;
-        }
-        if (Input.GetKeyDown(KeyCode.A) && Time.time > next)
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
-            moveDir = -transform.right;
-            next = delay + Time.time;
-            //transform.Translate(-transform.right, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, -90, 0));
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-            transform.eulerAngles = transform.eulerAngles + Vector3.up * -90;
+            Application.Quit();
         }
-        if (Input.GetKeyDown(KeyCode.W) && Time.time > next)
-        {
-            moveDir = transform.forward;
-            next = delay + Time.time;
-            //transform.Translate(transform.forward, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, 0, 0));
-            print("change is " + change);
 
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-        }
-        if (Input.GetKeyDown(KeyCode.S) && Time.time > next)
-        {
-            moveDir = -transform.forward;
-            next = delay + Time.time;
-            //transform.Translate(-transform.forward, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(0, 180, 0));
-            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-            transform.eulerAngles = transform.eulerAngles + Vector3.up * 180;
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && Time.time > next)
-        {
-            moveDir = transform.up;
-            next = delay + Time.time;
-            //transform.Translate(-transform.up, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(-90, 0, 0));
-            //iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-            if (transform.eulerAngles.x <= 90 || transform.eulerAngles.x > 270)
-            {
-                transform.eulerAngles = transform.eulerAngles + Vector3.right * -90;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow) && Time.time > next)
-        {
-            moveDir = -transform.up;
-            next = delay + Time.time;
-            //transform.Translate(-transform.down, Space.Self);
-            detect(moveDir);
-            //move(new Vector3(90, 0, 0));
-            //iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
-            //transform.position = transform.position + change;
-            if (transform.eulerAngles.x < 90.0f || transform.eulerAngles.x >= 270)
-            {
-                transform.eulerAngles = transform.eulerAngles + Vector3.right * 90;
-            }
-            print("down arrow, x is " + transform.eulerAngles.x);
-        }
+        all.GetComponent<CheckFinishment>().checkMatch();
     }
 
-    /*void OnTriggerEnter(Collider other)
-    {
-        print("Trigger entered");
-        GameObject go = other.gameObject;
-        float distance = (go.transform.position - this.transform.position).sqrMagnitude;
-        print(go.transform.position + "go's position");
-        print(this.transform.position + "this's position");
-        print(distance);
-        if (distance < 1)
-        {
-            go.transform.Translate(moveDir);
-        }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        print("Collision entered");
-        GameObject go = collision.gameObject;
-        if ((go.transform.position - this.transform.position).sqrMagnitude <= 1)
-        {
-            go.transform.Translate(moveDir);
-        }
-    }*/
 
     void move(Vector3 DirectEuler)
     {
@@ -135,7 +69,7 @@ public class FPMovement : MonoBehaviour
 
         change = direct;
 
-        if (Physics.Raycast(this.gameObject.transform.position, direct, out hit, 1))
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.25f), direct, out hit, 1))
         {
             if (hit.transform.tag == "box")
             {
@@ -148,11 +82,81 @@ public class FPMovement : MonoBehaviour
                 }
                 hit.transform.position = hit.transform.position + change;
             }
-            else if (hit.transform.tag == "wall")
+            else if (hit.transform.tag == "wall" || hit.transform.tag == "fire" || hit.transform.tag == "button")
             {
                 print("wall found");
                 change = new Vector3(0, 0, 0);
             }
+        }
+    }
+
+    public void forward()
+    {
+        if (!isPaused)
+        {
+            moveDir = transform.forward;
+            next = delay + Time.time;
+            detect(moveDir);
+
+            iTween.MoveTo(this.gameObject, transform.position + change, 0.2f);
+        }
+    }
+
+    public void back()
+    {
+        if (!isPaused)
+        {
+            moveDir = -transform.forward;
+            next = delay + Time.time;
+
+            transform.eulerAngles = transform.eulerAngles + Vector3.up * 180;
+        }
+    }
+
+    public void left()
+    {
+        if (!isPaused)
+        {
+            moveDir = -transform.right;
+            next = delay + Time.time;
+
+
+            transform.eulerAngles = transform.eulerAngles + Vector3.up * -90;
+        }
+    }
+
+    public void right()
+    {
+        if (!isPaused)
+        {
+            moveDir = transform.right;
+            next = delay + Time.time;
+
+            transform.eulerAngles = transform.eulerAngles + Vector3.up * 90;
+        }
+    }
+
+    public void up()
+    {
+        if (!isPaused)
+        {
+            moveDir = transform.up;
+            next = delay + Time.time;
+            detect(moveDir);
+
+            iTween.MoveTo(gameObject, transform.position + change, 0.2f);
+        }
+    }
+
+    public void down()
+    {
+        if (!isPaused)
+        {
+            moveDir = -transform.up;
+            next = delay + Time.time;
+            detect(moveDir);
+
+            iTween.MoveTo(gameObject, transform.position + change, 0.2f);
         }
     }
 }
