@@ -16,10 +16,12 @@ public class Sound : MonoBehaviour
     private bool[] dir = new bool[6];
     private bool flag = false;
     private byte[] AudioData;
+    int index;
     void Start()
     {
         audio = gameObject.GetComponent<AudioSource>();
         audio.clip = Microphone.Start(null, true, 1, frequency);
+        InvokeRepeating("temp", 0, 1);
     }
     void LateUpdate()
     {
@@ -33,10 +35,15 @@ public class Sound : MonoBehaviour
             return;
         }
         AudioData = Float2Byte();
-        System.Threading.Thread t = new System.Threading.Thread(Process);
-        t.Start();
+        //print(GetVolume(AudioData));
+        //System.Threading.Thread t = new System.Threading.Thread(Process);
+        //t.Start();
     }
-
+    public void temp()
+    {
+        AudioData = Float2Byte();
+        print(GetVolume(AudioData));
+    }
     void Process()
     {
         flag = true;
@@ -112,16 +119,50 @@ public class Sound : MonoBehaviour
         //dataSource array because a float converted in Int16 is 2 bytes.
 
         int rescaleFactor = short.MaxValue; //to convert float to Int16
-
+        var max = 0f;
         for (int i = 0; i < samples.Length; i++)
         {
             intData[i] = (short)(samples[i] * rescaleFactor);
+
             byte[] byteArr = new byte[2];
+            if (max < Math.Abs(intData[i]))
+            {
+                max = Math.Abs(intData[i]);
+            }
             byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i * 2);
-        }
 
+        }
+        print(max);
         return bytesData;
 
+    }
+
+    int GetVolume(byte[] source)
+    {
+        int vol = 0;
+        for (int i = 0; i < source.Length; i += 2)
+        {
+            int temp = 0;
+            if (source[i + 1]>0x80)
+            {
+                temp = (source[i + 1] ^ 0xff);
+                temp = (temp << 8) + (source[i] ^ 0xff)+1;
+            }
+            else
+            {
+                temp = source[i + 1];
+                temp = (temp << 8) + source[i];
+                
+            }
+            
+            //temp = source[i];
+            if (vol < temp)
+            {
+                vol = temp;
+            }
+        }
+        
+        return vol;
     }
 }
